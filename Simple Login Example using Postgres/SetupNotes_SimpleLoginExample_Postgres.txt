@@ -1,0 +1,67 @@
+#Create test users
+
+import datetime
+
+#Generate password creation dates for test users
+#print(datetime.datetime.now())
+
+#User123
+#2024-02-29 15:15:15.385063
+#P@ssW0rd123
+
+#UserBro81
+#2024-02-29 15:16:02.119932
+#Abc_123$@!
+
+#YOLO5309
+#2024-02-29 15:18:20.546394
+#c@Ntgu3sse
+
+#Manually generate hash for each test user
+print(hash("YOLO5309".lower() + "c@Ntgu3sse" + "2024-02-29 15:18:20.546394"))
+
+------------------------------------------------------------------------
+#Setup up the simple_login_example database
+
+-- create database simple_login_example
+
+/*create table users
+(
+	username varchar(15) NOT NULL,
+	hash_value BIGINT NOT NULL,
+	pwd_date varchar(26) NOT NULL
+)*/
+
+/*insert into users (username, hash_value, pwd_date)
+values
+('User123', 6894626735045261838, '2024-02-29 15:15:15.385063'),
+('UserBro81', -101242096392754505, '2024-02-29 15:16:02.119932'),
+('YOLO5309', -8622412610998660791, '2024-02-29 15:18:20.546394');*/
+
+-- select * from users
+
+------------------------------------------------------------------------
+#Install psycopg2 package and test connection to the simple_login_example database
+
+conda install -c anaconda psycopg2
+
+import psycopg2 as ppg2
+
+conn = ppg2.connect(database = 'simple_login_example',
+                       user = 'postgres',
+                       host = 'localhost',
+                       password = '<insert pwd>',
+                       port = 5432)
+
+cur = conn.cursor()
+cur.execute('SELECT * FROM users')
+rows = cur.fetchall()
+conn.commit()
+conn.close()
+
+for row in rows:
+    print(row)
+
+
+
+
