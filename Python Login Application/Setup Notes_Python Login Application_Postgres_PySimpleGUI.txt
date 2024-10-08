@@ -1,0 +1,81 @@
+Used Jupyter notebook to develop app
+
+***Create test users***
+
+import datetime
+import hashlib
+
+Generate password creation dates for test users
+print(datetime.datetime.now())
+
+User123
+2024-02-29 15:15:15.385063
+P@ssW0rd123
+
+UserBro81
+2024-02-29 15:16:02.119932
+Abc_123$@!
+
+YOLO5309
+2024-02-29 15:18:20.546394
+c@Ntgu3sse
+
+Manually generate hash for each test user
+sha256 = hashlib.sha256()
+sha256.update('User123'.lower().encode() + 'P@ssW0rd123'.encode() + '2024-02-29 15:15:15.385063'.encode())
+print(sha256.hexdigest())
+33ce72f28048221939b8f600e0dcdeb4168375f77585f90bbd0dc2057f63c893
+
+------------------------------------------------------------------------
+***Setup up the simple_login_example database using Postgres (using pgAdmin)***
+
+create database simple_login_example
+
+create table users
+(
+	username varchar(15) NOT NULL,
+	hash_value varchar(64) NOT NULL,
+	pwd_date varchar(26) NOT NULL
+)
+
+insert into users (username, hash_value, pwd_date)
+values
+('User123', '33ce72f28048221939b8f600e0dcdeb4168375f77585f90bbd0dc2057f63c893', '2024-02-29 15:15:15.385063'),
+('UserBro81', '9788e4cedd24edd8bf4e649a3e1eddb916bc5f3bb2fc4037a629d7542182a65c', '2024-02-29 15:16:02.119932'),
+('YOLO5309', '74760cf5f779fe2bb9ff8e31030911f8f5ecbf523cbaee742087d9fa47562014', '2024-02-29 15:18:20.546394');*/
+
+select * from users
+
+------------------------------------------------------------------------
+***Install psycopg2 package and test connection to the simple_login_example database***
+
+conda install -c anaconda psycopg2
+
+import psycopg2
+
+conn = psycopg2.connect(database = 'simple_login_example',
+                       user = 'postgres',
+                       host = 'localhost',
+                       password = '<insert password>',
+                       port = 5432)
+
+cur = conn.cursor()
+cur.execute('SELECT * FROM users')
+rows = cur.fetchall()
+conn.commit()
+conn.close()
+
+for row in rows:
+    print(row)
+    
+------------------------------------------------------------------------
+***Install PySimpleGUI and check to see it exists***
+
+python -m pip install pysimplegui
+
+try:
+    import PySimpleGUI
+except ImportError as error:
+    print(error)
+else:
+    print('PySimpleGUI exists')
