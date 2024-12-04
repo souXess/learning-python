@@ -1,0 +1,79 @@
+#Description: Provide consent for the app to access your Google data and get an authorization code
+#Author: souXess
+#Created: 02Dec2024
+#Last Modified: 04Dec2024
+
+---------------------------------------------------------------------------------------------------------------------
+'''
+Notes:
+-Must create a Google Cloud project first and then create new credentials (Google Cloud Console > APIs & Services >
+Credentials > + CREATE CREDENTIALS) in order to get a Client ID and Client secret.
+-Make sure the email of the Google used for testing is listed as a test user (Google Cloud Dashboard > 
+APIs & Services > OAuth consent screen > Test users).
+-After following consent screens, a page can't be reached screen appears but the authorization code will be in the URL.
+Example: https://localhost:8080/auth/google/callback?
+code={authorization code will be here}&scope=https://www.googleapis.com/auth/gmail.send
+'''
+
+import webbrowser
+
+GOOGLE_ACCOUNTS_BASE_URL = 'https://accounts.google.com'
+REQUEST_URL = '/o/oauth2/auth'
+REDIRECT_URI = 'https://localhost:8080/auth/google/callback'
+#Scopes for Google APIs can be found here: https://developers.google.com/oauthplayground/
+SCOPE = 'https://www.googleapis.com/auth/gmail.send'
+GOOGLE_CLIENT_ID = '<insert client ID>'
+
+#Open consent screen in new tab using the default browser
+webbrowser.open(f'{GOOGLE_ACCOUNTS_BASE_URL}{REQUEST_URL}?access_type=offline&client_id={GOOGLE_CLIENT_ID}' +
+                           f'&redirect_uri={REDIRECT_URI}&scope={SCOPE}&response_type=code', new = 2)
+---------------------------------------------------------------------------------------------------------------------
+#Description: Exchange authorization code for initial access token and a refresh token
+
+'''
+Notes:
+-The refresh token will only be provided in the initial request. To request the refresh token again, you'll need to
+delete the app's access from your google account (https://myaccount.google.com/security), request a new authorization
+code and plug it into the code below and run it.
+'''
+
+import requests
+import json
+
+GOOGLE_ACCOUNTS_BASE_URL = 'https://accounts.google.com'
+REQUEST_URL = '/o/oauth2/token'
+REDIRECT_URI = 'https://localhost:8080/auth/google/callback'
+GOOGLE_CLIENT_ID = '<insert client ID>'
+GOOGLE_CLIENT_SECRET = '<insert google client secret>'
+AUTHORIZATION_CODE = '<insert authorization code>'
+
+get_tokens = requests.post(f'{GOOGLE_ACCOUNTS_BASE_URL}{REQUEST_URL}?code={AUTHORIZATION_CODE}&client_id={GOOGLE_CLIENT_ID}' +
+                           f'&client_secret={GOOGLE_CLIENT_SECRET}&redirect_uri={REDIRECT_URI}&grant_type=authorization_code')
+
+response = json.loads(get_tokens.text)
+
+print(response)
+print() 
+print('ACCESS_TOKEN: ' + response['access_token'])
+print()
+print('REFRESH_TOKEN: ' + response['refresh_token'])
+---------------------------------------------------------------------------------------------------------------------
+#Description: Refresh the access token
+
+import requests
+import json
+
+GOOGLE_ACCOUNTS_BASE_URL = 'https://accounts.google.com'
+REQUEST_URL = '/o/oauth2/token'
+GOOGLE_CLIENT_ID = '<insert client ID>'
+GOOGLE_CLIENT_SECRET = '<insert google client secret>'
+REFRESH_TOKEN = '<insert refresh token>'
+
+refresh_access_token = requests.post(f'{GOOGLE_ACCOUNTS_BASE_URL}{REQUEST_URL}?client_id={GOOGLE_CLIENT_ID}' +
+                           f'&client_secret={GOOGLE_CLIENT_SECRET}&refresh_token={REFRESH_TOKEN}&grant_type=refresh_token')
+
+response = json.loads(refresh_access_token.text)
+
+print(response)
+print()
+print('ACCESS_TOKEN: ' + response['access_token'])
