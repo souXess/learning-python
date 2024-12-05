@@ -8,11 +8,12 @@
 Notes:
 -Must create a Google Cloud project first and then create new credentials (Google Cloud Console > APIs & Services >
 Credentials > + CREATE CREDENTIALS) in order to get a Client ID and Client secret.
--Make sure the email of the Google used for testing is listed as a test user (Google Cloud Dashboard > 
+-Make sure the email of the user consenting is also listed as a test user (Google Cloud Dashboard > 
 APIs & Services > OAuth consent screen > Test users).
--After following consent screens, a page can't be reached screen appears but the authorization code will be in the URL.
-Example: https://localhost:8080/auth/google/callback?
-code={authorization code will be here}&scope=https://www.googleapis.com/auth/gmail.send
+-After clicking through the consent screens, a page can't be reached screen appears but the authorization code will 
+be in the URL.
+Example: https://localhost:8080/auth/google/callback?code={authorization code will be here}&
+scope=https://www.googleapis.com/auth/gmail.send
 '''
 
 import webbrowser
