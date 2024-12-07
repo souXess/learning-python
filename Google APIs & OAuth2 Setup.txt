@@ -1,4 +1,4 @@
-#Description: Provide consent for the app to access your Google data and get an authorization code
+#Description: Provide consent for the app to send emails using a Gmail account and get an authorization code
 #Author: souXess
 #Created: 02Dec2024
 #Last Modified: 04Dec2024
