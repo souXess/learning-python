@@ -26,7 +26,7 @@ email has been sent.
 Confirmations).
 '''
 
-import requests, json, datetime as dt, time, os.path, logging, traceback, base64
+import requests, json, datetime as dt, time, os, logging, traceback, base64
 from email.message import EmailMessage
 
 #These packages need to be installed
